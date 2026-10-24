@@ -101,8 +101,6 @@ button{font:inherit;color:inherit;cursor:pointer}
 .clock{white-space:nowrap;display:flex;align-items:center;gap:8px}
 .clock::before{content:"";width:8px;height:8px;border-radius:50%;background:#E5533A;animation:blink 1.4s infinite}
 @keyframes blink{50%{opacity:.25}}
-.minimal{white-space:nowrap;text-decoration:none;border:1px solid rgba(237,230,214,.3);border-radius:99px;padding:5px 12px;color:var(--on-desk)}
-.minimal:hover{background:var(--on-desk);color:var(--ink)}
 
 section{padding:72px 0}
 h2.title{font:400 clamp(2.4rem,5vw,4rem)/1.02 var(--serif);margin:14px 0 12px;letter-spacing:-.01em}
@@ -468,6 +466,52 @@ body.lights-off .night{opacity:1}
 .win-card h3{font:400 2.2rem/1.05 var(--serif);margin:0 0 10px}
 .win-card p{color:var(--ink-2);margin:0 0 20px}
 
+/* ---------- case file overlay ---------- */
+#dossier{position:fixed;inset:0;z-index:56;overflow-y:auto;padding:0 16px 80px;background:rgba(12,20,16,.84);backdrop-filter:blur(6px)}
+#dossier[hidden]{display:none}
+.dossier-bar{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:12px;max-width:980px;margin:0 auto;padding:14px 0;color:var(--on-desk)}
+.dossier-bar button{padding:8px 16px;border-radius:99px;border:1px solid rgba(237,230,214,.3);background:rgba(21,34,28,.9);color:var(--on-desk)}
+.dossier-bar button:hover{background:var(--on-desk);color:var(--ink)}
+.case-sheet{--r:0deg;max-width:980px;margin:18px auto 0;padding:64px 64px 48px;animation:caseIn .45s cubic-bezier(.2,.8,.3,1)}
+@keyframes caseIn{from{transform:translateY(30px) rotate(1deg);opacity:0}}
+.case-head{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:44px;align-items:start;margin-bottom:44px}
+.case-head .q{color:var(--muted);text-transform:none;letter-spacing:.02em}
+.case-head h2{font:400 clamp(2.4rem,5vw,3.8rem)/1.02 var(--serif);margin:10px 0 14px}
+.case-head .lead{margin:0 0 18px;font-size:1.12rem;color:var(--ink-2)}
+.case-head .tags{padding:0}
+.case-head figure{position:relative;margin:12px 0 0;padding:8px 8px 0;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.18);transform:rotate(1.5deg)}
+.case-head .frame{aspect-ratio:16/9;background-color:#FBFAF5;background-image:linear-gradient(var(--grid) 1px, transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:16px 16px}
+.case-sheet.drawn .sk .ln > *{stroke-dashoffset:0;fill-opacity:1}
+.case-sheet.drawn .sk text{opacity:1}
+.case-body{display:grid;grid-template-columns:180px minmax(0,1fr);gap:0 36px}
+.case-body > *{padding:18px 0;border-top:1px solid var(--rule)}
+.case-body h3{margin:0;font:500 .72rem/1.9 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.case-body p{margin:0;font-size:1.05rem;color:var(--ink-2)}
+.case-body ol{margin:0;padding:0;list-style:none;counter-reset:k}
+.case-body li{position:relative;padding:5px 0 5px 40px;color:var(--ink-2)}
+.case-body li::before{counter-increment:k;content:counter(k, decimal-leading-zero);position:absolute;left:0;top:7px;font:700 .75rem var(--mono);color:var(--stamp)}
+.case-body .outcome p{padding:14px 18px;background:rgba(246,218,90,.28);border-left:4px solid var(--mark);color:var(--ink)}
+.case-body .learned{display:inline-block;padding:18px 22px;background:var(--sticky);transform:rotate(-.8deg);box-shadow:0 8px 16px rgba(0,0,0,.15);font:600 1.45rem/1.3 var(--hand);color:#2B2614}
+.deliverable{margin-top:28px;padding-top:22px;border-top:2px solid var(--ink)}
+.deliverable h3{margin:0 0 14px;color:var(--muted)}
+.deliverable p{color:var(--ink-2)}
+.deck{display:block;width:100%;height:78vh;margin-bottom:16px;border:1px solid var(--rule);background:#525659}
+.poster{display:block;max-width:520px}
+.poster img{display:block;width:100%;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.case-nav{display:flex;justify-content:space-between;gap:16px;margin-top:44px;padding-top:20px;border-top:1px solid var(--rule)}
+.case-nav button{max-width:48%;padding:0;border:0;background:none;text-align:left;font:400 1.3rem/1.2 var(--serif)}
+.case-nav button:last-child{text-align:right}
+.case-nav small{display:block;margin-bottom:4px;color:var(--muted)}
+.case-nav button:hover{color:var(--stamp)}
+.ex figure[data-case]{cursor:pointer}
+@media (max-width:760px){
+  .case-sheet{padding:44px 20px 32px}
+  .case-head{grid-template-columns:1fr;gap:28px}
+  .case-body{grid-template-columns:1fr}
+  .case-body h3{padding-bottom:0}
+  .case-body h3 + div{border-top:0;padding-top:6px}
+}
+
 /* ---------- intro: the cabinet that can't hold this file ---------- */
 #intro{position:fixed;inset:0;z-index:60;overflow:hidden;background:#1B2622;transition:opacity .6s}
 #intro.out{opacity:0;pointer-events:none}
@@ -602,7 +646,6 @@ body.lights-off .night{opacity:1}
   .lamp{right:14px}
   .lamp .chain{height:40px}
   .lamp.pull .chain{height:54px}
-  .minimal{display:none}
   .hud small{display:none}
   .stain{display:none}
   .row{grid-template-columns:1fr}
@@ -717,7 +760,6 @@ body.lights-off .night{opacity:1}
     </ul>
     <span class="clock mono" aria-label="Time spent on this case"><span id="clock">00:00</span></span>
     <a class="stk mono" id="stkCount" href="#stickers" aria-label="Stickers collected">🏅 0/8</a>
-    <a class="minimal mono" href="https://adityajainportfolio.lovable.app" target="_blank" rel="noopener">Minimal version →</a>
   </div>
 </header>
 
@@ -977,6 +1019,12 @@ body.lights-off .night{opacity:1}
 
 <div class="sticker-pop" id="stickerPop" role="status"></div>
 
+<!-- case file: a project's full write-up, opened over the desk -->
+<div id="dossier" hidden role="dialog" aria-modal="true" aria-labelledby="caseTitle">
+  <div class="dossier-bar"><button id="caseClose">← Back to the desk</button><span class="mono" id="caseCount"></span></div>
+  <article class="sheet case-sheet" id="caseSheet"></article>
+</div>
+
 <div class="modal" id="golden" hidden role="dialog" aria-modal="true" aria-labelledby="gtTitle">
   <div class="ticket-gold">
     <div class="tg-top">🎟️ GOLDEN TICKET · CASE № AJ-27 · ADMIT ONE</div>
@@ -995,7 +1043,6 @@ body.lights-off .night{opacity:1}
 <button class="sound mono" id="sound" aria-pressed="false"><span class="bars"><i></i><i></i><i></i></span><span id="soundLabel">Sound off</span></button>
 
 <script>
-const SITE = 'https://adityajainportfolio.lovable.app';
 
 const BRANCHES = {
   think:  {name:'Structures ambiguity', q:'Can Aditya break a messy problem into a clear answer?', color:'var(--c-think)'},
@@ -1107,7 +1154,7 @@ const READERS = {
 const NEXT = {
   email:   ['Email Aditya', 'mailto:aditya.jain2027@mastersunion.org'],
   linkedin:['Connect on LinkedIn', 'https://www.linkedin.com/in/aditya-jain-6394b4210'],
-  cv:      ['Download the one-page CV', SITE + '/Aditya_Jain_CV.pdf']
+  cv:      ['Download the one-page CV', 'files/Aditya_Jain_CV.pdf']
 };
 
 const $ = s => document.querySelector(s);
@@ -1458,18 +1505,21 @@ $('#exhibits').innerHTML = EXHIBITS.map((x,i) => {
   return `<article class="ex reveal" id="ex-${i+1}" data-br="${x.br}" style="--bc:${b.color}">
     <header class="mono"><span>Exhibit ${pad(i+1)}</span><span class="cat">${x.cat}<span class="dot" title="${b.name}"></span></span></header>
     <h3>${x.q}</h3>
-    <figure>${CLIP}<div class="frame">${SKETCH[x.slug]()}</div>
+    <figure data-case="${x.slug}">${CLIP}<div class="frame">${SKETCH[x.slug]()}</div>
       <figcaption class="stat"><b>${x.stat[0]}</b><span>${x.stat[1]}</span></figcaption></figure>
     <div class="body"><strong style="color:var(--ink)">${x.title}.</strong> ${x.d}</div>
     <div class="tags">${x.tags.map(t => `<span>${t}</span>`).join('')}</div>
-    <footer><span>Source: Aditya Jain, 2026 · ${b.name}</span><a href="${SITE}/projects/${x.slug}" target="_blank" rel="noopener">Open full case →</a></footer>
+    <footer><span>Source: Aditya Jain, 2026 · ${b.name}</span><a href="#case/${x.slug}" data-case="${x.slug}">Open full case →</a></footer>
   </article>`;
 }).join('');
 
-$$('.sk').forEach(svg => svg.querySelectorAll('.ln > *').forEach((el, i) => {
-  el.setAttribute('pathLength', 1);
-  el.style.transitionDelay = (.15 + i * .06) + 's';
-}));
+function prepSketches(root){
+  root.querySelectorAll('.sk').forEach(svg => svg.querySelectorAll('.ln > *').forEach((el, i) => {
+    el.setAttribute('pathLength', 1);
+    el.style.transitionDelay = (.15 + i * .06) + 's';
+  }));
+}
+prepSketches(document);
 
 function filterExhibits(k){
   $$('#exFilters .chip').forEach(c => c.classList.toggle('on', c.dataset.f === k));
@@ -2248,12 +2298,234 @@ $('#crumple').onclick = () => {
   setTimeout(() => tossGame.open(tossDone >= 5 ? 0 : tossDone), 650);
 };
 
+/* ---------- case files: each project's full write-up, opened right here on the desk ---------- */
+const PROJECTS = {
+  'renttrackr-manager': {
+    year:'2026',
+    lead:`A responsive rent and property management app for Indian landlords and tenants, with dual logins and payment tracking.`,
+    overview:`RentTrackr Manager is a web app that gives property managers and their tenants a shared, honest view of rent. Managers add properties and tenants, record payments and see what is outstanding; tenants sign in to see their own dues and history.`,
+    problem:`Rent in India is still largely tracked in notebooks, chat threads and spreadsheets. Managers lose track of who has paid, tenants have no record they can point to, and every month begins with the same round of reminder messages.`,
+    approach:`I started from the two people in the loop and gave each their own view of the same data, rather than bolting a tenant portal onto a manager tool. From there I kept the surface deliberately small: properties, tenants, payments. Anything that did not help answer 'who owes what, and since when' stayed out of v1.`,
+    work:[`Mapped the manager and tenant journeys and the moments where they disagree.`,
+          `Modelled properties, tenants and payments as a relational schema with row-level access per role.`,
+          `Built dual authentication so the same app renders two different dashboards.`,
+          `Designed a responsive layout, since most landlords check this on a phone.`,
+          `Iterated on the payment-recording flow until it took a handful of taps.`],
+    outcome:`A working, publicly accessible app covering the full loop: onboard a property, add tenants, record and review payments, on desktop and mobile.`,
+    learned:`Role-based data access is a design problem before it is a database problem — deciding what each role should never see made both the schema and the interface simpler.`,
+    file:{kind:'link', href:'https://renttrackr1.lovable.app', label:'Open the live app'}
+  },
+  'eva-luggage-campaign': {
+    year:'2026',
+    lead:`A launch campaign concept for Eva, a premium luggage brand — built around the tagline 'Built for New Beginnings' and aimed at young professionals starting new chapters.`,
+    overview:`Eva is a premium luggage brand concept positioned around life's transitions — new jobs, new cities, new beginnings. The campaign visual pairs the product with the Masters' Union and DLF Cyberpark skyline, anchoring the brand in the ambition of young professionals on the move. The tagline 'Built for New Beginnings' and the sign-off 'Your Journey. Our Strength.' frame luggage not as a utility but as a companion to ambition.`,
+    problem:`Luggage advertising is dominated by either feature checklists (wheels, shells, warranties) or generic travel wanderlust. Neither speaks to the most emotionally charged travel moment in a young professional's life: leaving home for a first job, a first city, a first apartment. That moment is exactly when someone buys their first serious suitcase.`,
+    approach:`I positioned Eva around new beginnings rather than destinations. The creative direction places the product inside an aspirational but familiar scene — arriving at a corporate campus at golden hour — so the buyer sees themselves in the frame. Warm tones, minimal typography and a thin-line logo keep the brand feeling premium and calm rather than loud.`,
+    work:[`Defined the brand idea: luggage as a symbol of new beginnings, not of travel itself.`,
+          `Wrote the verbal identity — the tagline 'Built for New Beginnings' and the closing line 'Your Journey. Our Strength.'`,
+          `Directed the hero visual: two young professionals arriving at a modern corporate campus at golden hour, Eva cases in hand.`,
+          `Designed the layout system: top-left wordmark and tagline, bottom sign-off with a geometric seal, generous negative space.`,
+          `Iterated on AI-generated renders until the scene, lighting and product read as a cohesive premium campaign.`],
+    outcome:`A launch-ready campaign poster that establishes Eva's positioning, tone of voice and visual language in a single frame — premium, warm and built around the customer's next chapter.`,
+    learned:`Strong campaigns sell a moment, not a product. Anchoring the brand to a life transition gave every downstream decision — tagline, casting, lighting, typography — a single filter to be judged against.`,
+    file:{kind:'image', href:'files/Eva_Campaign_Poster.jpg', label:'the campaign poster'}
+  },
+  'creator-cfo': {
+    year:'2026',
+    lead:`A business-model evaluation for a financial intelligence OS that helps Indian creators turn fragmented income into predictable profit margins.`,
+    overview:`Creator CFO is a proposed operating system for the modern creator enterprise. It pulls multi-channel income and expenses into one view, calculates campaign-level net margin, and flags cost overruns before they erode profit.`,
+    problem:`India's 4M+ monetizing creators manage brand deals, AdSense, affiliates and courses through spreadsheets and WhatsApp. Most have world-class content analytics but near-zero visibility into true profitability, with 60–90 day payout delays and hidden production costs quietly eating 15–25% of deal margins.`,
+    approach:`I treated the problem as a business-model and go-to-market challenge, not just a product feature set. The deck sizes the market, defines the decision unit (user, champion, buyer), and maps a dual GTM motion: product-led free tools for solo creators and sales-led outreach to agencies and multi-channel networks.`,
+    work:[`Sized the Indian creator economy using BCG and ISB-Hashfame reports and defined the addressable base of professionalizing creators.`,
+          `Mapped revenue complexity, expense creep and the 'vanity metrics' blindspot that existing tools leave unaddressed.`,
+          `Designed a three-layer product architecture: data ingestion via Account Aggregator and invoice parsing, automated expense tagging, and an output dashboard for net margin per deal.`,
+          `Built a tiered SaaS monetization model and a long-term fintech expansion path into working-capital loans and invoice discounting.`,
+          `Positioned Creator CFO between generic accounting software and social analytics platforms using proprietary deal-margin benchmarks and deep AA integration as moats.`],
+    outcome:`A 10-slide business model evaluation that frames the opportunity, defines the ICP, proposes pricing tiers from ₹499 to ₹5,999/month, and recommends a lean pilot before any full technology build.`,
+    learned:`For B2B/B2C hybrid ideas, the buyer and the user are rarely the same person. Designing the value proposition around the creator-owner's P&L anxiety — not just the operator's workflow — changes both pricing power and sales motion.`,
+    file:{kind:'pdf', href:'files/Creator_CFO_Deck.pdf', label:'deck'}
+  },
+  'flatbuddy': {
+    year:'2026',
+    lead:`A two-sided marketplace concept that matches students and young professionals with verified, compatible roommates instead of empty rooms.`,
+    overview:`FlatBuddy is a mobile-first marketplace for roommate matching. It replaces informal WhatsApp groups and broker-led searches with verified profiles, lifestyle matching, in-app chat and digital rent-sharing agreements.`,
+    problem:`Finding a compatible, trustworthy roommate is still broken: scattered channels, no identity verification, weeks of dead-end messaging, and brokers charging steep one-time fees for matches that often fail.`,
+    approach:`I designed FlatBuddy as a two-sided marketplace with distinct supply and demand motions. The supply side starts with PGs, co-living operators and existing tenants looking to fill a spot; the demand side starts with campus orientation tie-ups, employer relocation partnerships and performance marketing.`,
+    work:[`Defined the core trust and matching problem from both the room-seeker and room-listers' perspectives.`,
+          `Designed the value loop: verified profiles and lifestyle data produce better matches, better matches reduce turnover, and lower turnover increases marketplace liquidity.`,
+          `Mapped a four-lever monetization model: premium subscriptions, success/booking fees, verification add-ons, and partner referral revenue.`,
+          `Outlined supply-side and demand-side acquisition tactics, including campus ambassadors, HR partnerships and referral loops.`,
+          `Structured the user journey from profile creation to match, visit, agreement and move-in.`],
+    outcome:`A 10-slide product deck that articulates the marketplace thesis, target segments, monetization model and a clear path from search to move-in.`,
+    learned:`Two-sided marketplaces only work when both sides show up at the same time. The most important early decision is which side has the highest urgency and lowest acquisition cost — in FlatBuddy's case, people with a room to fill.`,
+    file:{kind:'pdf', href:'files/FlatBuddy_Deck.pdf', label:'deck'}
+  },
+  'flash-bites': {
+    year:'2026',
+    lead:`A D2C food venture concept for flash-frozen, high-protein, preservative-free Indian meals aimed at busy professionals and students.`,
+    overview:`Flash Bites is a D2C food concept that delivers chef-designed, dietician-approved, flash-frozen meals. It targets time-starved professionals, students and travelers who want quick, affordable, preservative-free Indian food without daily cooking or expensive subscriptions.`,
+    problem:`Existing healthy-meal alternatives force a trade-off: they require refrigeration, are full of preservatives, high in sodium, expensive, or cause decision fatigue. No option combines nutrition, convenience, Indian flavors, long shelf life and budget-friendly pricing.`,
+    approach:`I built the case around five levers — quality, price, personalization, convenience and brand story — and a 12-month path from kitchen build to seed-ready. The model uses a co-packer, D2C website/app, Q-commerce partnerships and corporate/campus bulk packs.`,
+    work:[`Defined the ideal customer and the daily overwhelm that makes meal-prep a pain point worth solving.`,
+          `Mapped a four-phase rollout: foundation, soft launch, scale acquisition, and retention/expansion.`,
+          `Designed an integrated acquisition-to-retention funnel with campus ambassadors, trial packs, smart subscriptions, adaptive recommendations and referral credit.`,
+          `Built unit economics around ₹149–249 per meal, subscription discounts, and a 55–60% gross-margin target.`,
+          `Created a competitive comparison showing how Flash Bites combines convenience, nutrition, personalization, Indian flavors and shelf stability in one product ecosystem.`],
+    outcome:`A complete D2C venture deck covering problem, customer, market opportunity, business model, competitive advantage, go-to-market and unit economics.`,
+    learned:`In crowded D2C categories, the winning pitch is not just the product — it is the combination of margin, repeat purchase rate and channel mix. If the unit economics do not hold, the brand story does not matter.`,
+    file:{kind:'pdf', href:'files/Flash_Bites_Deck.pdf', label:'deck'}
+  },
+  'gostops-jas-demand-engine': {
+    year:'2026',
+    lead:`A product-led, experience-led and community-led strategy to improve goSTOPS' monsoon RevPAB without relying on discounts.`,
+    overview:`The JAS Demand Engine is a strategy to turn goSTOPS' monsoon quarter from a low-occupancy, low-margin period into a productive travel occasion. It combines bookable monsoon formats, a flexible #RainCheckIn pass and a Monsoon Maker experience layer to create, convert and retain demand.`,
+    problem:`During the JAS (July-August-September) monsoon quarter, goSTOPS occupancy drops to 25–30% and RevPAB falls to ~₹300 against a peak of ₹750–800. Most available beds sit unproductive, and the default response — discounting — erodes margin without creating new demand.`,
+    approach:`I reframed JAS as a demand-creation problem, not a pricing problem. The strategy targets three need-based segments — remote professionals, corporate/startup teams, and creators/student communities — and sells a complete monsoon outcome (productive stay, team reset, or creator weekend) instead of an empty bed.`,
+    work:[`Diagnosed the JAS gap using occupancy, RevPAB and direct-booking data, and showed that the implied RevPAB decline is closer to 60–63% than the headline 35–40%.`,
+          `Ran a Porter's Five Forces analysis to identify experience differentiation as the only defensible niche in a high-buyer-power market.`,
+          `Designed the three-layer engine: Monsoon Collective (product formats), #RainCheckIn (acquisition/commitment), and Monsoon Maker (experience & loyalty).`,
+          `Built a 4P implementation plan across product, price, place and promotion, including perceived-value pricing and a direct-first distribution system.`,
+          `Created a campaign blueprint and pilot decision gates to validate demand before any commercial rollout.`],
+    outcome:`A 15-slide strategy deck that proposes a controlled pilot, defines occupancy and RevPAB targets, and maps the path from lean MVP to validated scale across 70+ properties.`,
+    learned:`The best growth strategies do not start with channels or campaigns; they start with a precise answer to why a customer should act differently. In this case, the job was to replace monsoon uncertainty with proof, community and flexibility.`,
+    file:{kind:'pdf', href:'files/goSTOPS_JAS_Demand_Engine.pdf', label:'deck'}
+  },
+  'startup-success-myth-vs-reality': {
+    year:'2026',
+    lead:`An analytics study of 1,000 startups testing which metrics actually predict revenue — followers, traffic, or recurring income.`,
+    overview:`A presentation built for the AI in Business course at Masters' Union. Instead of studying one successful company, it searches for patterns across 1,000 startups using eight data points each — followers, visitors, MRR, pricing, subscriptions, category, country and revenue.`,
+    problem:`Everyone carries an intuition about what makes a startup work: a big audience, lots of traffic, a hot category. Those intuitions are rarely tested, and founders optimise for the metric that is easiest to grow rather than the one that predicts revenue.`,
+    approach:`I treated each popular assumption as a hypothesis and tested it against the dataset, then built the deck so the audience meets the myth before they meet the data — the story moves from what people believe, to what the correlations show, to what an investor should do with that.`,
+    work:[`Framed three testable myths: followers drive revenue, visitors drive revenue, category decides outcomes.`,
+          `Ran correlation analysis across the dataset for each variable against revenue.`,
+          `Found followers barely related (r ≈ 0.02) and visitors only slightly related (r ≈ 0.16).`,
+          `Identified recurring revenue as the strongest single signal, tracking revenue almost one-for-one (r ≈ 0.87).`,
+          `Compared total revenue by category — AI led, ahead of SaaS, e-commerce and marketing — but showed the spread within each category is just as wide.`,
+          `Closed with an investor exercise contrasting a high-follower, low-MRR company against a small-audience, high-retention one.`],
+    outcome:`A 10-slide data story with a single clear conclusion: predictable, recurring income compounds while attention does not, and category gives a tailwind rather than a guarantee.`,
+    learned:`Correlation work only lands when it is narrated. Leading with the assumption the room already holds made the data feel like a discovery instead of a chart dump.`,
+    file:{kind:'pdf', href:'files/Startup_Success_Myth_vs_Reality.pdf', label:'presentation'}
+  },
+  'indian-service-marketplace': {
+    year:'2026',
+    lead:`A sector study of how local services move from a 99% informal market to organised, on-demand platforms — and what actually decides who wins.`,
+    overview:`A deck mapping India's home and local services market: how supply, platform and demand fit together, the waves the sector has moved through, and why the next phase is decided by density, quality and unit economics rather than raw demand.`,
+    problem:`Around 99% of the market is still informal. Customers face fragmentation, inconsistent quality and a persistent trust deficit; service professionals face unstable income, no formal career path and no safety net. Both sides lose to the same missing layer.`,
+    approach:`I structured the sector as a three-part system — fragmented supply, a platform that supplies trust, matching, payments and quality control, and urban demand for reliability — then traced its evolution through three waves: informal word-of-mouth, scheduled platform bookings, and instant 10–60 minute fulfilment.`,
+    work:[`Sized and characterised the informal-to-organised shift in Indian local services.`,
+          `Built a supply–platform–demand map showing where value and trust are actually created.`,
+          `Traced the three waves of market evolution and what changed in customer expectation at each step.`,
+          `Examined how density and repeat frequency, not just demand, drive marketplace economics.`,
+          `Drew out the implications for worker formalisation, quality standards and defensibility.`],
+    outcome:`A structured point of view on where the sector is heading and which capabilities — density, quality control and unit economics — separate durable platforms from the rest.`,
+    learned:`In marketplaces, the hard problem is almost always supply. Organising and retaining professionals is what makes the demand side work, not the other way round.`,
+    file:{kind:'pdf', href:'files/Indian_Service_Marketplace_Deck.pdf', label:'deck'}
+  }
+};
+
+const dossier = (() => {
+  const box = $('#dossier'), sheet = $('#caseSheet'), order = EXHIBITS.map(x => x.slug);
+  let current = null, opener = null, pushed = false;
+
+  function deliverable(p, x){
+    const f = p.file, head = '<h3 class="mono">The deliverable</h3>';
+    if(f.kind === 'pdf') return `<div class="deliverable">${head}
+      ${innerWidth > 760 ? `<iframe class="deck" src="${f.href}#view=FitH" title="${x.title}: the ${f.label}"></iframe>` : ''}
+      <div class="ctas"><a class="btn solid" href="${f.href}" target="_blank" rel="noopener">📄 Open the ${f.label} (PDF)</a><a class="btn" href="${f.href}" download>⬇ Download</a></div></div>`;
+    if(f.kind === 'image') return `<div class="deliverable">${head}
+      <a class="poster" href="${f.href}" target="_blank" rel="noopener"><img src="${f.href}" alt="${x.title}: ${f.label}" loading="lazy"></a></div>`;
+    return `<div class="deliverable">${head}<p>RentTrackr is live and publicly accessible. It opens in a new tab.</p>
+      <div class="ctas"><a class="btn solid" href="${f.href}" target="_blank" rel="noopener">${f.label} ↗</a></div></div>`;
+  }
+  function render(slug){
+    const n = order.length, i = order.indexOf(slug), x = EXHIBITS[i], p = PROJECTS[slug];
+    const prev = EXHIBITS[(i + n - 1) % n], next = EXHIBITS[(i + 1) % n];
+    $('#caseCount').textContent = `Exhibit ${pad(i + 1)} of ${pad(n)}`;
+    sheet.style.setProperty('--bc', BRANCHES[x.br].color);
+    sheet.classList.remove('drawn');
+    sheet.innerHTML = `
+      <span class="dymo red">Exhibit ${pad(i + 1)} · ${x.cat} · ${p.year}</span>
+      <div class="case-head">
+        <div>
+          <span class="mono q">${x.q}</span>
+          <h2 id="caseTitle">${x.title}</h2>
+          <p class="lead">${p.lead}</p>
+          <div class="tags">${x.tags.map(t => `<span>${t}</span>`).join('')}</div>
+        </div>
+        <figure>${CLIP}<div class="frame">${SKETCH[slug]()}</div><figcaption class="stat"><b>${x.stat[0]}</b><span>${x.stat[1]}</span></figcaption></figure>
+      </div>
+      <div class="case-body">
+        <h3>Overview</h3><div><p>${p.overview}</p></div>
+        <h3>Problem &amp; context</h3><div><p>${p.problem}</p></div>
+        <h3>My approach</h3><div><p>${p.approach}</p></div>
+        <h3>Key work &amp; process</h3><div><ol>${p.work.map(w => `<li>${w}</li>`).join('')}</ol></div>
+        <h3>Outcome</h3><div class="outcome"><p>${p.outcome}</p></div>
+        <h3>What I learned</h3><div><p class="learned">${p.learned}</p></div>
+      </div>
+      ${deliverable(p, x)}
+      <nav class="case-nav" aria-label="More case files">
+        <button data-step="-1"><small class="mono">Previous</small>← ${prev.title}</button>
+        <button data-step="1"><small class="mono">Next</small>${next.title} →</button>
+      </nav>`;
+    prepSketches(sheet);
+    requestAnimationFrame(() => requestAnimationFrame(() => sheet.classList.add('drawn')));
+    box.scrollTop = 0;
+    current = slug;
+  }
+  // how: 'push' adds a history entry (so Back closes it), 'replace' swaps the entry, 'none' leaves the URL alone
+  function open(slug, how = 'push'){
+    if(!PROJECTS[slug]) return;
+    if(box.hidden) opener = document.activeElement;
+    render(slug);
+    if(how === 'push'){ history.pushState({caseFile:slug}, '', '#case/' + slug); pushed = true; }
+    else if(how === 'replace') history.replaceState({caseFile:slug}, '', '#case/' + slug);
+    box.hidden = false; document.body.classList.add('locked');
+    $('#caseClose').focus({preventScroll:true});
+    sfx('paper');
+  }
+  function hide(){
+    box.hidden = true; current = null;
+    sheet.innerHTML = '';   // unloads the PDF
+    if($('#intake').classList.contains('gone')) document.body.classList.remove('locked');
+    if(opener && opener.focus) opener.focus({preventScroll:true});
+  }
+  function close(){
+    if(box.hidden) return;
+    if(pushed){ pushed = false; history.back(); }   // the popstate below hides it
+    else { history.replaceState(null, '', location.pathname + location.search); hide(); }
+  }
+  addEventListener('popstate', () => {
+    const m = location.hash.match(/^#case\/(.+)$/);
+    if(m && PROJECTS[m[1]]) open(m[1], 'none');
+    else if(!box.hidden){ pushed = false; hide(); }
+  });
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-case]');
+    if(a){ e.preventDefault(); open(a.dataset.case); }
+  });
+  sheet.addEventListener('click', e => {
+    const b = e.target.closest('[data-step]');
+    if(b){ const n = order.length; open(order[(order.indexOf(current) + +b.dataset.step + n) % n], 'replace'); }
+  });
+  $('#caseClose').onclick = close;
+  box.addEventListener('keydown', e => { if(e.key === 'Escape') close(); });
+  box.addEventListener('click', e => { if(e.target === box) close(); });
+  return {open};
+})();
+
 /* ---------- start ---------- */
 selectBranch('think', false);
 // the "who's across the table?" folder always waits for an answer
 const begin = () => runIntro(true).then(() => $('#who button').focus());
 // a tab opened in the background shouldn't play the intro to nobody: wait until it's on screen
-if(document.hidden) document.addEventListener('visibilitychange', function wait(){
+const deepCase = location.hash.match(/^#case\/(.+)$/);
+if(deepCase && PROJECTS[deepCase[1]]){
+  // a shared link to one project skips the intro and opens that case file straight away
+  $('#intro').hidden = true; introDone = true;
+  setReader('curious'); closeIntake();
+  dossier.open(deepCase[1], 'none');
+}
+else if(document.hidden) document.addEventListener('visibilitychange', function wait(){
   if(document.hidden) return;
   document.removeEventListener('visibilitychange', wait); begin();
 });
