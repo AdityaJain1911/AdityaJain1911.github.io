@@ -1115,8 +1115,9 @@ const $$ = s => [...document.querySelectorAll(s)];
 const pad = n => String(n).padStart(2,'0');
 const fmt = s => pad(Math.floor(s/60)) + ':' + pad(s%60);
 const elapsed = () => started ? Math.floor((Date.now() - started) / 1000) : 0;
-function store(k, v){ try{ localStorage.setItem(k, v) }catch(e){} }
-function recall(k){ try{ return localStorage.getItem(k) }catch(e){ return null } }
+// nothing is remembered between visits: every load starts a fresh case.
+// clear what earlier versions of the site saved in visitors' browsers
+try{ ['aj-reader', 'aj-stickers', 'aj-toss'].forEach(k => localStorage.removeItem(k)); }catch(e){}
 
 /* ---------- sound: synthesized foley + a generative lo-fi loop (no audio files) ---------- */
 let soundOn = false, introDone = false, ctx = null, master, sfxBus, musicBus, NB;
@@ -1265,7 +1266,6 @@ $('#who').innerHTML = ['hiring','founder','people','curious'].map(k =>
 let reader = null, started = 0;
 function setReader(key){
   reader = READERS[key] ? key : 'curious';
-  store('aj-reader', reader);
   const r = READERS[reader];
   $('#sticky').innerHTML = `Reader: <b>${r.label}</b><br>→ ${r.note}<br><button id="changeReader">wrong? change</button>`;
   $('#changeReader').onclick = openIntake;
@@ -1735,7 +1735,7 @@ const STICKERS = {
   sharp:       ['⏱️', 'Sharp Reviewer', 'Approved in under 15 minutes'],
   champion:    ['🗑️', 'Bin Champion', 'Beat all 5 levels of paper toss']
 };
-const earned = new Set((recall('aj-stickers') || '').split(',').filter(k => STICKERS[k]));
+const earned = new Set();
 const ALL = Object.keys(STICKERS).length;
 const complete = () => earned.size === ALL;
 function renderStickers(){
@@ -1749,7 +1749,7 @@ function renderStickers(){
 let popTimer = 0;
 function award(k){
   if(earned.has(k)) return;
-  earned.add(k); store('aj-stickers', [...earned].join(','));
+  earned.add(k);
   renderStickers();
   const [e, name, how] = STICKERS[k], pop = $('#stickerPop');
   pop.innerHTML = `<span class="badge">${e}</span><span><b>Sticker unlocked: ${name}</b><small>${how} · ${earned.size}/${ALL}${complete() ? ' · that\'s all of them!' : ''}</small></span>`;
@@ -1952,7 +1952,7 @@ addEventListener('pointermove', e => {
 }, {passive:true});
 
 /* priority line: unlocked by beating paper toss */
-let tossDone = Math.min(5, +(recall('aj-toss') || 0));
+let tossDone = 0;
 const PRIORITY_MAIL = () => 'mailto:aditya.jain2027@mastersunion.org?subject=' + encodeURIComponent('PRIORITY · I beat the bin (Case AJ-27)') +
   '&body=' + encodeURIComponent('Hi Aditya,\n\nI binned all 5 objections in your paper toss, so I\'m using the priority line.\n\n');
 function refreshPriority(){
@@ -2121,7 +2121,7 @@ const tossGame = (() => {
     say(lines[Math.floor(Math.random() * lines.length)], 1000);
   }
   function next(){
-    tossDone = Math.max(tossDone, lvl + 1); store('aj-toss', tossDone); renderObjections();
+    tossDone = Math.max(tossDone, lvl + 1); renderObjections();
     if(lvl === LEVELS.length - 1) return won();
     sfx('levelup'); setLevel(lvl + 1);
   }
@@ -2249,14 +2249,9 @@ $('#crumple').onclick = () => {
 };
 
 /* ---------- start ---------- */
-const saved = recall('aj-reader');
 selectBranch('think', false);
-// the "who's across the table?" folder always waits for an answer, even for returning visitors
-const begin = () => runIntro(true).then(() => {
-  const last = READERS[saved] ? saved : null;
-  markLast(last);
-  $(last ? `#who [data-reader="${last}"]` : '#who button').focus();
-});
+// the "who's across the table?" folder always waits for an answer
+const begin = () => runIntro(true).then(() => $('#who button').focus());
 // a tab opened in the background shouldn't play the intro to nobody: wait until it's on screen
 if(document.hidden) document.addEventListener('visibilitychange', function wait(){
   if(document.hidden) return;
